@@ -1,0 +1,4 @@
+Application has thrown an uncaught exception and is terminated:
+Error [ERR_REQUIRE_ESM]: require() of ES Module E:\HostingSpaces\seb\dns\dns.netshops.gr\wwwroot\SebNodeJS\index.js from C:\Program Files (x86)\iisnode\interceptor.js not supported.
+Instead change the require of index.js in C:\Program Files (x86)\iisnode\interceptor.js to a dynamic import() which is available in all CommonJS modules.
+    at Object.<anonymous> (C:\Program Files (x86)\iisnode\interceptor.js:210:1)
