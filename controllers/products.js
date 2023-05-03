@@ -1,63 +1,139 @@
-import Products from "../models/Products.js";
+import Product from "../models/Products.js";
+
+export const createProduct = async (req, res) => {
+  console.log("req", req);
+  const { id } = req.params;
+  try {
+    const {
+      name,
+      by,
+      energy,
+      fat,
+      saturated_fat,
+      carbs,
+      sugar,
+      edible,
+      protein,
+      salt,
+      category,
+    } = req.body;
+
+    const newProduct = new Product({
+      name: name,
+      by: by,
+      energy: energy,
+      fat: fat,
+      saturated_fat: saturated_fat,
+      carbs: carbs,
+      sugar: sugar,
+      edible: edible,
+      protein: protein,
+      salt: salt,
+      category: category,
+    });
+
+    const product = await Product.findById(id);
+    if (product) {
+      // Define the filter to find the document to update
+      const filter = { _id: id };
+      // Define the update operation
+      const product = await Product.findOneAndUpdate(filter, req.body);
+      await product.save();
+      const updatedProduct = await Product.findOne(filter);
+      const products = await Product.find().sort({ createdAt: -1 });
+      res.status(201).json({
+        product: updatedProduct,
+        products: products,
+        msg: "Επιτυχημένη ανανέωση",
+      });
+    } else {
+      await newProduct.save();
+      // const products = await getProducts;
+      // const product = await Product.findOne({ email: email });
+      const products = await Product.find().sort({ createdAt: -1 });
+      res.status(201).json({
+        // product: product,
+        products: products,
+        msg: "Επιτυχημένη εγγραφη",
+      });
+      // send(newProduct.firstName);
+    }
+  } catch (err) {
+    res.status(409).json({ message: err.message });
+  }
+};
 
 /* READ */
 export const getProducts = async (req, res) => {
   try {
     // const { id } = req.params;
-    const products = await Products.find().sort({ createdAt: -1 });
+    const products = await Product.find()
+      .select(["-createdAt", "-updatedAt"])
+      .sort({ createdAt: -1 });
     res.status(200).json(products);
   } catch (err) {
     res.status(404).json({ message: err.message });
   }
 };
 
-export const getUserFriends = async (req, res) => {
+export const deleteProduct = async (req, res) => {
   try {
     const { id } = req.params;
-    const user = await User.findById(id);
-
-    const friends = await Promise.all(
-      user.friends.map((id) => User.findById(id))
-    );
-    const formattedFriends = friends.map(
-      ({ _id, firstName, lastName, occupation, location, picturePath }) => {
-        return { _id, firstName, lastName, occupation, location, picturePath };
-      }
-    );
-    res.status(200).json(formattedFriends);
+    await Products.findByIdAndDelete(id);
+    const products = await Products.find().sort({ createdAt: -1 });
+    res.status(201).json(products);
   } catch (err) {
-    res.status(404).json({ message: err.message });
+    res.status(409).json({ message: err.message });
   }
 };
+
+// export const getProductFriends = async (req, res) => {
+//   try {
+//     const { id } = req.params;
+//     const product = await Product.findById(id);
+
+//     const friends = await Promise.all(
+//       product.friends.map((id) => Product.findById(id))
+//     );
+//     const formattedFriends = friends.map(
+//       ({ _id, firstName, lastName, occupation, location, picturePath }) => {
+//         return { _id, firstName, lastName, occupation, location, picturePath };
+//       }
+//     );
+//     res.status(200).json(formattedFriends);
+//   } catch (err) {
+//     res.status(404).json({ message: err.message });
+//   }
+// };
 
 /* UPDATE */
-export const addRemoveFriend = async (req, res) => {
-  try {
-    const { id, friendId } = req.params;
-    const user = await User.findById(id);
-    const friend = await User.findById(friendId);
+// export const addRemoveFriend = async (req, res) => {
+//   try {
+//     const { id, friendId } = req.params;
+//     const product = await Product.findById(id);
+//     const friend = await Product.findById(friendId);
 
-    if (user.friends.includes(friendId)) {
-      user.friends = user.friends.filter((id) => id !== friendId);
-      friend.friends = friend.friends.filter((id) => id !== id);
-    } else {
-      user.friends.push(friendId);
-      friend.friends.push(id);
-    }
-    await user.save();
-    await friend.save();
+//     if (product.friends.includes(friendId)) {
+//       product.friends = product.friends.filter((id) => id !== friendId);
+//       friend.friends = friend.friends.filter((id) => id !== id);
+//     } else {
+//       product.friends.push(friendId);
+//       friend.friends.push(id);
+//     }
+//     await product.save();
+//     await friend.save();
 
-    const friends = await Promise.all(
-      user.friends.map((id) => User.findById(id))
-    );
-    const formattedFriends = friends.map(
-      ({ _id, firstName, lastName, occupation, location, picturePath }) => {
-        return { _id, firstName, lastName, occupation, location, picturePath };
-      }
-    );
+//     const friends = await Promise.all(
+//       product.friends.map((id) => Product.findById(id))
+//     );
+//     const formattedFriends = friends.map(
+//       ({ _id, firstName, lastName, occupation, location, picturePath }) => {
+//         return { _id, firstName, lastName, occupation, location, picturePath };
+//       }
+//     );
 
-    res.status(200).json(formattedFriends);
-  } catch (err) {
-    res.status(404).json({ message: err.message });
-  }
-};
+//     res.status(200).json(formattedFriends);
+//   } catch (err) {
+//     res.status(404).json({ message: err.message });
+//   }
+// };

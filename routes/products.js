@@ -1,5 +1,9 @@
 import express from "express";
-import { getProducts } from "../controllers/products.js";
+import {
+  deleteProduct,
+  getProducts,
+  createProduct,
+} from "../controllers/products.js";
 import { verifyToken } from "../middleware/auth.js";
 
 const router = express.Router();
@@ -12,5 +16,11 @@ router.get("/", getProducts);
 
 // /* UPDATE */
 // router.patch("/:id/like", verifyToken, likePost);
+
+router.post("/new", createProduct);
+
+/**DELETE */
+router.delete("/:id", verifyToken, deleteProduct);
+router.patch("/:id", createProduct);
 
 export default router;

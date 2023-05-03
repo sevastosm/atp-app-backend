@@ -1,13 +1,14 @@
 import User from "../models/User.js";
+import bcrypt from "bcrypt";
+
+import send from "../mail.js";
 
 /* READ */
-
-const getUsers = User.find().sort({ createdAt: -1 });
 
 export const getAllUsers = async (req, res) => {
   try {
     const { id } = req.params;
-    const users = await User.find().sort({ createdAt: -1 });
+    const users = await User.find().select("-password").sort({ createdAt: -1 });
     res.status(200).json(users);
   } catch (err) {
     res.status(404).json({ message: err.message });
@@ -30,28 +31,20 @@ export const createUser = async (req, res) => {
     const { id } = req.params;
     const { firstName, lastName, email, mobile, role } = req.body;
 
+    const salt = await bcrypt.genSalt();
+    const passwordHash = await bcrypt.hash(mobile, salt);
+
     const newUser = new User({
       firstName: firstName,
       lastName: lastName,
       email: email,
       mobile: mobile,
+      password: passwordHash,
       role: role || "user",
       metrics: [],
     });
+
     const user = await User.findById(id);
-
-    if (req.method === "DELETE") {
-      await User.findByIdAndDelete(id, (err, doc) => {
-        if (err) {
-          console.log(err);
-        } else {
-          console.log(doc);
-        }
-      });
-      const users = await User.find().sort({ createdAt: -1 });
-      res.status(201).json(users);
-    }
-
     if (user) {
       // Define the filter to find the document to update
       const filter = { _id: id };
@@ -60,14 +53,19 @@ export const createUser = async (req, res) => {
       await user.save();
       const updatedUser = await User.findOne(filter);
       const users = await User.find().sort({ createdAt: -1 });
-      res.status(201).json({ user: updatedUser, users: users });
+      res
+        .status(201)
+        .json({ user: updatedUser, users: users, msg: "Επιτυχημένη ανανέωση" });
     } else {
       await newUser.save();
       // const users = await getUsers;
       const user = await User.findOne({ email: email });
       const users = await User.find().sort({ createdAt: -1 });
-
-      res.status(201).json({ user: user, users: users });
+      delete user.password;
+      res
+        .status(201)
+        .json({ user: user, users: users, msg: "Επιτυχημένη εγγραφη" });
+      // send(newUser.firstName);
     }
   } catch (err) {
     res.status(409).json({ message: err.message });

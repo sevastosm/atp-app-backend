@@ -9,7 +9,7 @@ const ProductsSchema = new mongoose.Schema(
     energy: String,
     fat: String,
     saturated_fat: String,
-    cabs: String,
+    carbs: String,
     sugar: String,
     edible: String,
     protein: String,
@@ -19,5 +19,5 @@ const ProductsSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const Products = mongoose.model("Products", ProductsSchema);
-export default Products;
+const Product = mongoose.model("Products", ProductsSchema);
+export default Product;

@@ -10,7 +10,7 @@ import { verifyToken } from "../middleware/auth.js";
 const router = express.Router();
 
 /* READ */
-router.get("/", getAllUsers);
+router.get("/", verifyToken, getAllUsers);
 
 router.post("/new", createUser);
 
