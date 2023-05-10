@@ -20,6 +20,8 @@ router.post("/new", createUser);
 
 /* UPDATE */
 router.patch("/:id", createUser);
+// router.patch("/diet/:id", addDiet);
+
 /* DELETE */
 router.delete("/:id", deleteUser);
 

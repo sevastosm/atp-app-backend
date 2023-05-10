@@ -26,10 +26,9 @@ export const getUser = async (req, res) => {
 };
 
 export const createUser = async (req, res) => {
-  console.log("req", req);
   try {
     const { id } = req.params;
-    const { firstName, lastName, email, mobile, role } = req.body;
+    const { firstName, lastName, email, mobile, role, gender } = req.body;
 
     const salt = await bcrypt.genSalt();
     const passwordHash = await bcrypt.hash(mobile, salt);
@@ -42,6 +41,9 @@ export const createUser = async (req, res) => {
       password: passwordHash,
       role: role || "user",
       metrics: [],
+      notes: [],
+      nutrition: [],
+      gender: gender,
     });
 
     const user = await User.findById(id);
@@ -60,12 +62,13 @@ export const createUser = async (req, res) => {
       await newUser.save();
       // const users = await getUsers;
       const user = await User.findOne({ email: email });
-      const users = await User.find().sort({ createdAt: -1 });
+      const users = await User.find()
+        .select("-password")
+        .sort({ createdAt: -1 });
       delete user.password;
       res
         .status(201)
         .json({ user: user, users: users, msg: "Επιτυχημένη εγγραφη" });
-      // send(newUser.firstName);
     }
   } catch (err) {
     res.status(409).json({ message: err.message });
@@ -77,8 +80,10 @@ export const deleteUser = async (req, res) => {
     const { id } = req.params;
     if (req.method === "DELETE") {
       await User.findByIdAndDelete(id);
-      const users = await User.find().sort({ createdAt: -1 });
-      res.status(201).json(users);
+      const users = await User.find()
+        .select("-password")
+        .sort({ createdAt: -1 });
+      res.status(200).json({ users: users, msg: "Επιτυχημένη διαγραφή" });
     }
   } catch (err) {
     res.status(409).json({ message: err.message });

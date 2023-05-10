@@ -1,8 +1,8 @@
 import Product from "../models/Products.js";
 
 export const createProduct = async (req, res) => {
-  console.log("req", req);
   const { id } = req.params;
+
   try {
     const {
       name,
@@ -40,21 +40,22 @@ export const createProduct = async (req, res) => {
       const product = await Product.findOneAndUpdate(filter, req.body);
       await product.save();
       const updatedProduct = await Product.findOne(filter);
-      const products = await Product.find().sort({ createdAt: -1 });
-      res.status(201).json({
+      const products = await Product.find()
+        .select(["-createdAt", "-updatedAt"])
+        .sort({ createdAt: -1 });
+      return res.status(201).json({
         product: updatedProduct,
         products: products,
-        msg: "Επιτυχημένη ανανέωση",
+        msg: "Επιτυχημένη ανανέωση προιόντος",
       });
     } else {
       await newProduct.save();
-      // const products = await getProducts;
-      // const product = await Product.findOne({ email: email });
-      const products = await Product.find().sort({ createdAt: -1 });
+      const products = await Product.find()
+        .select(["-createdAt", "-updatedAt"])
+        .sort({ createdAt: -1 });
       res.status(201).json({
-        // product: product,
         products: products,
-        msg: "Επιτυχημένη εγγραφη",
+        msg: "Επιτυχημένη εγγραφη προιόντος",
       });
       // send(newProduct.firstName);
     }
@@ -79,9 +80,11 @@ export const getProducts = async (req, res) => {
 export const deleteProduct = async (req, res) => {
   try {
     const { id } = req.params;
-    await Products.findByIdAndDelete(id);
-    const products = await Products.find().sort({ createdAt: -1 });
-    res.status(201).json(products);
+    await Product.findByIdAndDelete(id);
+    const products = await Product.find()
+      .select(["-createdAt", "-updatedAt"])
+      .sort({ createdAt: -1 });
+    res.status(200).json(products);
   } catch (err) {
     res.status(409).json({ message: err.message });
   }

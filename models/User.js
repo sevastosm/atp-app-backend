@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 
 // To add my user scema ...
+const DietSchema = new mongoose.Schema({});
 
 const UserSchema = new mongoose.Schema(
   {
@@ -46,6 +47,14 @@ const UserSchema = new mongoose.Schema(
     nextApoitment: {
       type: String,
       default: "",
+    },
+    notes: {
+      type: Array,
+      default: [],
+    },
+    nutrition: {
+      type: Array,
+      default: [DietSchema],
     },
     role: {
       type: String,
