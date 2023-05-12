@@ -13,6 +13,7 @@ const DietSchema = new mongoose.Schema(
       required: true,
       default: [],
     },
+    caloriesLimit: String,
   },
   { timestamps: true }
 );

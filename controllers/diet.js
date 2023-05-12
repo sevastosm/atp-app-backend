@@ -1,23 +1,31 @@
 import Diet from "../models/Diet.js";
 import User from "../models/User.js";
+import { ObjectId } from "mongodb";
 
 export const createUpdateDiet = async (req, res) => {
   const { id, dietId } = req.params;
   try {
-    const { duration, boxes } = req.body;
+    const { duration, boxes, caloriesLimit } = req.body;
 
     const newDiet = new Diet({
       duration: duration,
       boxes: boxes,
+      caloriesLimit: caloriesLimit,
     });
     const user = await User.findById(id);
 
     let updatedDiet;
     if (dietId) {
       updatedDiet = user.nutrition.map((data, i) => {
-        console.log("DATATAT", data);
-        if (data._id === dietId) {
-          return { ...data, boxes: boxes, duration: duration };
+        if (
+          typeof ObjectId(data._id) ? data._id.toString() : data._id === dietId
+        ) {
+          return {
+            ...data,
+            boxes: boxes,
+            duration: duration,
+            caloriesLimit: caloriesLimit,
+          };
         } else {
           return data;
         }
