@@ -9,7 +9,7 @@ import { verifyToken } from "../middleware/auth.js";
 const router = express.Router();
 
 /* READ */
-router.get("/", getProducts);
+router.get("/", verifyToken, getProducts);
 //router.get("/", verifyToken, getProducts);
 
 // router.get("/:userId/posts", verifyToken, getUserPosts);
@@ -17,7 +17,7 @@ router.get("/", getProducts);
 // /* UPDATE */
 // router.patch("/:id/like", verifyToken, likePost);
 
-router.post("/new", createProduct);
+router.post("/new", verifyToken, createProduct);
 
 /**DELETE */
 router.delete("/:id", verifyToken, deleteProduct);

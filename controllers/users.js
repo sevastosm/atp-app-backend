@@ -51,7 +51,10 @@ export const createUser = async (req, res) => {
       // Define the filter to find the document to update
       const filter = { _id: id };
       // Define the update operation
-      const user = await User.findOneAndUpdate(filter, req.body);
+      const user = await User.findOneAndUpdate(filter, {
+        ...req.body,
+        password: passwordHash,
+      });
       await user.save();
       const updatedUser = await User.findOne(filter);
       const users = await User.find().sort({ createdAt: -1 });
