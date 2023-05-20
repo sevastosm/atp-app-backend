@@ -6,6 +6,7 @@ export const createProduct = async (req, res) => {
   try {
     const {
       name,
+      count_unit,
       by,
       energy,
       fat,
@@ -20,6 +21,7 @@ export const createProduct = async (req, res) => {
 
     const newProduct = new Product({
       name: name,
+      count_unit: count_unit,
       by: by,
       energy: energy,
       fat: fat,

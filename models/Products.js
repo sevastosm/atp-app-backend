@@ -5,6 +5,7 @@ import mongoose from "mongoose";
 const ProductsSchema = new mongoose.Schema(
   {
     name: String,
+    count_unit: String,
     by: String,
     energy: String,
     fat: String,
