@@ -14,12 +14,18 @@ export const createUpdateDiet = async (req, res) => {
     });
     const user = await User.findById(id);
 
+    console.log("req.params", req.params);
+
     let updatedDiet;
     if (dietId) {
       updatedDiet = user.nutrition.map((data, i) => {
-        if (
-          typeof ObjectId(data._id) ? data._id.toString() : data._id === dietId
-        ) {
+        const dataID = typeof ObjectId(data._id)
+          ? data._id.toString()
+          : data._id;
+
+        console.log("dataID", dataID);
+
+        if (dataID === dietId) {
           return {
             ...data,
             boxes: boxes,
