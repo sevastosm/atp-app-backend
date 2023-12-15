@@ -1,0 +1,87 @@
+<html>
+<head>
+    <title>iisnode logs</title>
+    <style type="text/css">
+        body
+        {
+            font-family: "Trebuchet MS" , Arial, Helvetica, sans-serif;
+        }
+        table
+        {
+            border-collapse: collapse;
+        }
+        td, th
+        {
+            border: 1px solid lightgray;
+            padding: 3px 7px 2px 7px;
+        }
+        th
+        {
+            text-align: left;
+            padding-top: 5px;
+            padding-bottom: 4px;
+            background-color: Gray;
+            color: #ffffff;
+        }
+        td.stderr
+        {
+            color: Red;
+        }
+    </style>
+</head>
+<body>
+    <table id="logFilesTable">
+        <tr>
+            <th>
+                Computer name
+            </th>
+            <th>
+                PID
+            </th>
+            <th>
+                Type
+            </th>
+            <th>
+                Created
+            </th>
+            <th>
+                Link
+            </th>
+        </tr>
+    </table>
+    <p id="lastUpdated"></p>
+    <script type="text/javascript">
+
+        // this is replaced with actual data at runtime by code in interceptor.js
+        var logFiles = [{"file":"VM-01-WIN2012R2-10452-stderr-1687962133381.txt","computername":"VM-01-WIN2012R2","pid":10452,"type":"stderr","created":1687962133381},{"file":"VM-01-WIN2012R2-10556-stderr-1687961765179.txt","computername":"VM-01-WIN2012R2","pid":10556,"type":"stderr","created":1687961765179},{"file":"VM-01-WIN2012R2-11272-stderr-1687962348358.txt","computername":"VM-01-WIN2012R2","pid":11272,"type":"stderr","created":1687962348358},{"file":"VM-01-WIN2012R2-11968-stderr-1687962355410.txt","computername":"VM-01-WIN2012R2","pid":11968,"type":"stderr","created":1687962355410},{"file":"VM-01-WIN2012R2-12036-stderr-1687962395793.txt","computername":"VM-01-WIN2012R2","pid":12036,"type":"stderr","created":1687962395793},{"file":"VM-01-WIN2012R2-13960-stderr-1687961692007.txt","computername":"VM-01-WIN2012R2","pid":13960,"type":"stderr","created":1687961692007},{"file":"VM-01-WIN2012R2-14716-stderr-1687961650801.txt","computername":"VM-01-WIN2012R2","pid":14716,"type":"stderr","created":1687961650801},{"file":"VM-01-WIN2012R2-16648-stderr-1687962382293.txt","computername":"VM-01-WIN2012R2","pid":16648,"type":"stderr","created":1687962382293},{"file":"VM-01-WIN2012R2-17124-stderr-1687961716633.txt","computername":"VM-01-WIN2012R2","pid":17124,"type":"stderr","created":1687961716633},{"file":"VM-01-WIN2012R2-17348-stderr-1687961677851.txt","computername":"VM-01-WIN2012R2","pid":17348,"type":"stderr","created":1687961677851},{"file":"VM-01-WIN2012R2-3752-stderr-1687962387206.txt","computername":"VM-01-WIN2012R2","pid":3752,"type":"stderr","created":1687962387206},{"file":"VM-01-WIN2012R2-4004-stderr-1687961768843.txt","computername":"VM-01-WIN2012R2","pid":4004,"type":"stderr","created":1687961768843},{"file":"VM-01-WIN2012R2-6236-stderr-1687962339994.txt","computername":"VM-01-WIN2012R2","pid":6236,"type":"stderr","created":1687962339994},{"file":"VM-01-WIN2012R2-7008-stderr-1687962128612.txt","computername":"VM-01-WIN2012R2","pid":7008,"type":"stderr","created":1687962128612},{"file":"VM-01-WIN2012R2-7884-stderr-1687962078363.txt","computername":"VM-01-WIN2012R2","pid":7884,"type":"stderr","created":1687962078363},{"file":"VM-01-WIN2012R2-8224-stderr-1687962665920.txt","computername":"VM-01-WIN2012R2","pid":8224,"type":"stderr","created":1687962665920},{"file":"VM-01-WIN2012R2-8224-stdout-1687962665916.txt","computername":"VM-01-WIN2012R2","pid":8224,"type":"stdout","created":1687962665916},{"file":"VM-01-WIN2012R2-8736-stderr-1687961719866.txt","computername":"VM-01-WIN2012R2","pid":8736,"type":"stderr","created":1687961719866},{"file":"VM-01-WIN2012R2-8932-stderr-1687961991907.txt","computername":"VM-01-WIN2012R2","pid":8932,"type":"stderr","created":1687961991907},{"file":"VM-01-WIN2012R2-9464-stderr-1687961615811.txt","computername":"VM-01-WIN2012R2","pid":9464,"type":"stderr","created":1687961615811},{"file":"VM-01-WIN2012R2-980-stderr-1687962374544.txt","computername":"VM-01-WIN2012R2","pid":980,"type":"stderr","created":1687962374544},{"file":"VM-01-WIN2012R2-9876-stderr-1687961958141.txt","computername":"VM-01-WIN2012R2","pid":9876,"type":"stderr","created":1687961958141}];
+        var lastUpdated = 1687962667220;
+        var date = new Date();
+
+        date.setTime(lastUpdated);
+        document.getElementById('lastUpdated').innerHTML = 'Index was last updated ' + date;
+
+        logFiles.sort(function (a, b) {
+            return b.created - a.created;
+        });
+
+        var logFilesTable = document.getElementById("logFilesTable");
+        for (var i = 0; i < logFiles.length; i++) {
+            var logFile = logFiles[i];
+            date.setTime(logFile.created);
+            var row = logFilesTable.insertRow(-1);
+            var computerNameCell = row.insertCell(0);
+            var pidCell = row.insertCell(1);
+            var typeCell = row.insertCell(2);
+            var dateCell = row.insertCell(3);
+            var logCell = row.insertCell(4);
+            computerNameCell.innerHTML = logFile.computername;
+            pidCell.innerHTML = logFile.pid.toString();
+            typeCell.innerHTML = logFile.type;
+            typeCell.setAttribute('class', logFile.type);
+            dateCell.innerHTML = date.toString();
+            logCell.innerHTML = '<a href="' + logFile.file + '">log</a>';
+        };
+
+    </script>
+</body>
+</html>

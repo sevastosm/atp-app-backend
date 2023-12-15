@@ -6,7 +6,7 @@ esbuild
     bundle: true,
     outfile: "./dist/bundle.js",
     platform: "node",
-    target: ["node18"],
-    external: ["express", "nock", "aws-sdk", "mock-aws-s3", "bcrypt", "morgan"],
+    // target: ["node18"],
+    // external: ["express", "nock", "aws-sdk", "mock-aws-s3", "bcrypt", "morgan"],
   })
   .catch(() => process.exit(1));
